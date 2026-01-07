@@ -385,7 +385,7 @@ if st.button("Generate", type="primary"):
     role = safe_filename(data["role_title"])
 
     cv_name = f"Xiaoxuan_Li_CV_{company}_{role}.docx"
-    cl_name = f"Xiaoxuan_Li_CoverLetter_{company}_{role}.docx"
+    cl_name = f"Xiaoxuan_Li_Cover_Letter_{company}_{role}.docx"
     zip_name = f"Xiaoxuan_Li_{company}_{role}.zip"
 
     zip_bytes = make_zip(cv_bytes, cl_bytes, cv_name, cl_name)
