@@ -53,6 +53,7 @@ def replace_tokens_in_doc(doc: Document, mapping: Dict[str, str]) -> None:
 
 
 def doc_contains_token(doc: Document, token: str) -> bool:
+    """Check if a {{TOKEN}} exists anywhere in the document."""
     needle = f"{{{{{token}}}}}"
 
     for p in doc.paragraphs:
@@ -70,6 +71,7 @@ def doc_contains_token(doc: Document, token: str) -> bool:
 
 
 def make_zip(cv_bytes: bytes, cl_bytes: bytes, cv_name: str, cl_name: str) -> bytes:
+    """Create an in-memory ZIP containing the CV and cover letter."""
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as z:
         z.writestr(cv_name, cv_bytes)
@@ -79,20 +81,15 @@ def make_zip(cv_bytes: bytes, cl_bytes: bytes, cv_name: str, cl_name: str) -> by
 
 # -----------------------------
 # Model output schema (Pydantic)
-# We request 6 Versuni bullets so we can "add one extra bullet point" when needed.
+# 6 Versuni bullets = room for an extra bullet and better alignment.
 # -----------------------------
 class CVCoverOutput(BaseModel):
     company: str
     role_title: str
     about_me: str
-
-    # 6 bullets: lets us add an extra bullet point when fixing unsupported claims
     versuni_bullets: List[str] = Field(min_length=6, max_length=6)
-
     philips_bullets: List[str] = Field(min_length=2, max_length=2)
     cover_letter_body: str
-
-    # If anything is not supported by base materials, list it here
     new_claims_not_in_base: List[str] = Field(default_factory=list)
 
 
@@ -111,7 +108,7 @@ def generate_structured(
     """
     fix_mode=False: normal generation
     fix_mode=True: second pass if the model flagged unsupported claims.
-                   It must remove/adjust those claims AND add 1 extra CV bullet (already enforced by schema).
+                   It must remove/adjust those claims AND still return 6 Versuni bullets.
     """
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -127,20 +124,55 @@ You are given:
 2) The user's ORIGINAL cover letter (base cover letter)
 3) A job description
 
-Your job:
-- Rewrite ONLY: ABOUT_ME, Versuni bullets (exactly 6), Philips bullets (2), and the cover letter body.
-- The output must be high quality, concrete, ATS-friendly, and aligned with the job description.
-- All content MUST be strictly grounded in the base CV + base cover letter. Do NOT invent employers, titles, dates, metrics, tools, budgets, languages, or results.
-- Preserve the user's voice from the base cover letter.
-- Output MUST match the schema exactly.
+OVERALL GOAL
+- Tailor the CV and cover letter so that, when a recruiter scans them,
+  the Versuni experience bullets and the cover letter bullet points
+  clearly mirror the structure and priorities of the job description.
 
-IMPORTANT SAFETY CHECK:
-- If you add any claim not clearly supported by the base CV or base cover letter,
+ALIGNMENT WITH JOB DESCRIPTION BULLET POINTS
+- First, read the job description and mentally identify the main bullets
+  under responsibilities / requirements / what you’ll do / who you are.
+- Keep their original order from top to bottom.
+- For the Versuni section:
+  - You MUST produce exactly 6 bullets.
+  - Order these 6 bullets to follow the job description bullet order.
+    Bullet 1 should align to the first key requirement, bullet 2 to the next, etc.
+  - Each bullet should clearly show “I did this / I can do this” for that specific requirement,
+    using matching concepts and key phrases where honest.
+- For the cover letter body:
+  - Include a clear section with bullet points (or short structured lines) that
+    explicitly map your experience to the job requirements.
+  - Order those cover letter bullets in the same sequence as the job description bullets,
+    so a recruiter instantly sees the one-to-one match.
+
+GROUNDING RULES (NO INVENTED CLAIMS)
+- All content MUST be strictly grounded in the base CV + base cover letter.
+- Do NOT invent employers, titles, dates, locations, tools, budgets, metrics, languages,
+  or results that are not clearly supported by the base materials.
+- You MAY rephrase and recombine what’s already there to increase relevance and clarity.
+
+WRITING STYLE
+- Keep writing crisp, structured, and ATS-friendly.
+- Use concrete outcomes and responsibilities where they genuinely exist in the base CV.
+- Preserve the user's voice and tone from the base cover letter.
+
+SCHEMA & SAFETY
+- You must output exactly:
+  - company
+  - role_title
+  - about_me
+  - versuni_bullets (exactly 6)
+  - philips_bullets (exactly 2)
+  - cover_letter_body
+  - new_claims_not_in_base (list of strings)
+- IMPORTANT SAFETY CHECK:
+  If you add any claim not clearly supported by the base CV or base cover letter,
   list it in new_claims_not_in_base. Otherwise return [].
 
 SECOND-PASS FIX MODE (only if requested):
-- If fix_mode is enabled, you must eliminate or reword the unsupported claims listed below so that new_claims_not_in_base becomes [].
-- Also ensure the 6th Versuni bullet is an additional strong bullet, derived by rewording/recombining what is already in the base materials and aligned to the job description.
+- If fix_mode is enabled, you must eliminate or reword the unsupported claims listed below
+  so that new_claims_not_in_base becomes [].
+- You must still return 6 Versuni bullets and keep the JD-aligned ordering.
 
 Unsupported claims to fix (if any):
 {issues_text if issues_text else "(none)"}
@@ -151,13 +183,13 @@ BASE CV (source of truth):
 BASE COVER LETTER (source of truth):
 {base_cover_letter}
 
-USER PROMPT / RULES:
+USER PROMPT / RULES (additional preferences):
 {prompt_rules}
 """.strip()
 
     user_msg = f"JOB DESCRIPTION:\n{job_description}"
     if fix_mode:
-        user_msg += "\n\nPlease revise the draft to remove unsupported claims and keep new_claims_not_in_base empty, while maintaining strong impact and including 6 Versuni bullets."
+        user_msg += "\n\nPlease revise the draft to remove unsupported claims and keep new_claims_not_in_base empty, while maintaining strong impact, keeping 6 Versuni bullets aligned to the JD bullet order, and preserving the cover letter structure."
 
     resp = client.responses.parse(
         model=model,
@@ -182,7 +214,7 @@ def build_docs(
     cv_doc = Document(io.BytesIO(cv_template_bytes))
     cl_doc = Document(io.BytesIO(cl_template_bytes))
 
-    # Some templates may not have {{VERSUNI_BULLET_6}}.
+    # Check whether the CV template has a dedicated slot for bullet 6.
     has_bullet_6 = doc_contains_token(cv_doc, "VERSUNI_BULLET_6")
 
     # If no placeholder for bullet 6, append it to bullet 5 so you still get the "extra bullet".
@@ -207,8 +239,23 @@ def build_docs(
         "COVER_LETTER_BODY": data["cover_letter_body"],
     }
 
+    # Fill both documents
     replace_tokens_in_doc(cv_doc, mapping)
     replace_tokens_in_doc(cl_doc, mapping)
+
+    # --- Remove duplicate "Cover Letter for ..." line between header and body ---
+    # Keep the FIRST occurrence (title), blank out the SECOND occurrence if present.
+    seen_title = False
+    for p in cl_doc.paragraphs:
+        text = p.text.strip()
+        if not text:
+            continue
+        if "Cover Letter for" in text:
+            if not seen_title:
+                seen_title = True
+            else:
+                p.text = ""
+                break
 
     cv_out = io.BytesIO()
     cl_out = io.BytesIO()
@@ -225,7 +272,7 @@ st.title("CV + Cover Letter Agent")
 
 model = st.secrets.get("MODEL", "gpt-5.2")
 
-# Load templates
+# Template paths
 CV_TEMPLATE_CORPORATE = "templates/cv_template.docx"
 CV_TEMPLATE_STARTUP = "templates/cv_template_startup.docx"
 CL_TEMPLATE = "templates/cover_letter_template.docx"
@@ -278,7 +325,7 @@ if st.button("Generate", type="primary"):
     required_cv_tokens = [
         "ABOUT_ME",
         "VERSUNI_BULLET_1", "VERSUNI_BULLET_2", "VERSUNI_BULLET_3", "VERSUNI_BULLET_4", "VERSUNI_BULLET_5",
-        # Bullet 6 is optional in the template; we handle it gracefully.
+        # Bullet 6 is optional in template.
         "PHILIPS_BULLET_1", "PHILIPS_BULLET_2",
     ]
     required_cl_tokens = ["COMPANY", "COVER_LETTER_BODY"]
@@ -308,7 +355,7 @@ if st.button("Generate", type="primary"):
             fix_mode=False,
         )
 
-    # 2) If unsupported claims exist, auto-fix once and add extra bullet via schema (6 bullets always)
+    # 2) If unsupported claims exist, auto-fix once
     if data.get("new_claims_not_in_base"):
         with st.spinner("Fixing unsupported claims and strengthening CV..."):
             data_fixed = generate_structured(
@@ -321,7 +368,6 @@ if st.button("Generate", type="primary"):
                 issues_to_fix=data["new_claims_not_in_base"],
             )
 
-        # If still problematic after one auto-fix, stop and show issues
         if data_fixed.get("new_claims_not_in_base"):
             st.error("I tried to fix unsupported claims, but some remain. Please review:")
             st.write(data_fixed["new_claims_not_in_base"])
@@ -339,7 +385,7 @@ if st.button("Generate", type="primary"):
     role = safe_filename(data["role_title"])
 
     cv_name = f"Xiaoxuan_Li_CV_{company}_{role}.docx"
-    cl_name = f"Xiaoxuan_Li_Cover_Letter_{company}_{role}.docx"
+    cl_name = f"Xiaoxuan_Li_CoverLetter_{company}_{role}.docx"
     zip_name = f"Xiaoxuan_Li_{company}_{role}.zip"
 
     zip_bytes = make_zip(cv_bytes, cl_bytes, cv_name, cl_name)
