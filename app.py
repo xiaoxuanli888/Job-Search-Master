@@ -80,6 +80,26 @@ def make_zip(cv_bytes: bytes, cl_bytes: bytes, cv_name: str, cl_name: str) -> by
 
 
 # -----------------------------
+# Template maps (DE / NL × Corporate / Startup)
+# -----------------------------
+CV_TEMPLATES = {
+    "Germany": {
+        "Corporate": "templates/cv_template_DE_corporate.docx",
+        "Startup": "templates/cv_template_DE_startup.docx",
+    },
+    "Netherlands": {
+        "Corporate": "templates/cv_template_NL_corporate.docx",
+        "Startup": "templates/cv_template_NL_startup.docx",
+    },
+}
+
+CL_TEMPLATES = {
+    "Germany": "templates/cover_letter_template_DE.docx",
+    "Netherlands": "templates/cover_letter_template_NL.docx",
+}
+
+
+# -----------------------------
 # Model output schema (Pydantic)
 # 6 Versuni bullets = room for an extra bullet and better alignment.
 # -----------------------------
@@ -102,6 +122,8 @@ def generate_structured(
     base_cv: str,
     base_cover_letter: str,
     model: str,
+    country: str,
+    cv_style: str,
     fix_mode: bool = False,
     issues_to_fix: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
@@ -118,6 +140,12 @@ def generate_structured(
 
     system_instructions = f"""
 You are a CV + cover letter customization engine.
+
+TARGET CONTEXT
+- Country: {country}
+- CV positioning: {cv_style} role in {country}
+- Make sure tone, examples and emphasis fit this market and style
+  (e.g. for Germany vs Netherlands, and for corporate vs startup).
 
 You are given:
 1) The user's ORIGINAL CV content (base CV)
@@ -189,7 +217,12 @@ USER PROMPT / RULES (additional preferences):
 
     user_msg = f"JOB DESCRIPTION:\n{job_description}"
     if fix_mode:
-        user_msg += "\n\nPlease revise the draft to remove unsupported claims and keep new_claims_not_in_base empty, while maintaining strong impact, keeping 6 Versuni bullets aligned to the JD bullet order, and preserving the cover letter structure."
+        user_msg += (
+            "\n\nPlease revise the draft to remove unsupported claims and keep "
+            "new_claims_not_in_base empty, while maintaining strong impact, "
+            "keeping 6 Versuni bullets aligned to the JD bullet order, and "
+            "preserving the cover letter structure."
+        )
 
     resp = client.responses.parse(
         model=model,
@@ -235,6 +268,7 @@ def build_docs(
         "VERSUNI_BULLET_6": bullet6 if has_bullet_6 else "",
         "PHILIPS_BULLET_1": data["philips_bullets"][0],
         "PHILIPS_BULLET_2": data["philips_bullets"][1],
+        # You can adjust the city if you want to be country-specific.
         "DATE_TODAY": datetime.now().strftime("%d %B %Y, Berlin"),
         "COVER_LETTER_BODY": data["cover_letter_body"],
     }
@@ -272,29 +306,25 @@ st.title("CV + Cover Letter Agent")
 
 model = st.secrets.get("MODEL", "gpt-5.2")
 
-# Template paths
-CV_TEMPLATE_CORPORATE = "templates/cv_template.docx"
-CV_TEMPLATE_STARTUP = "templates/cv_template_startup.docx"
-CL_TEMPLATE = "templates/cover_letter_template.docx"
-
-# Controls row
+# -----------------------------
+# Controls (country, style, debug, test JD)
+# -----------------------------
 colA, colB, colC = st.columns([1, 1, 1])
 with colA:
-    template_choice = st.radio(
-        "CV template",
-        options=["Corporate", "Startup"],
-        index=0,
-        horizontal=True,
-    )
+    country = st.selectbox("Country", ["Germany", "Netherlands"], index=0)
 with colB:
-    show_debug = st.checkbox("Show debug JSON", value=False)
+    cv_style = st.radio("CV style", ["Corporate", "Startup"], index=0, horizontal=True)
 with colC:
-    use_test = st.checkbox("Use test job description", value=False)
+    show_debug = st.checkbox("Show debug JSON", value=False)
 
-cv_template_path = CV_TEMPLATE_CORPORATE if template_choice == "Corporate" else CV_TEMPLATE_STARTUP
+use_test = st.checkbox("Use test job description (prompt/test_job_description.txt)", value=False)
+
+# Resolve template paths from maps
+cv_template_path = CV_TEMPLATES[country][cv_style]
+cl_template_path = CL_TEMPLATES[country]
 
 cv_template_bytes = load_bytes(cv_template_path)
-cl_template_bytes = load_bytes(CL_TEMPLATE)
+cl_template_bytes = load_bytes(cl_template_path)
 
 # Base materials
 prompt_rules = load_text("prompt/instructions.txt")
@@ -308,7 +338,7 @@ try:
 except FileNotFoundError:
     test_jd = ""
 
-st.caption("Paste a job description → Generate → Download a ZIP with CV + cover letter (.docx).")
+st.caption("Choose country & style → paste a job description → generate → download ZIP with CV + cover letter (.docx).")
 
 default_text = test_jd if (use_test and test_jd.strip()) else ""
 job_description = st.text_area("Job description", value=default_text, height=320)
@@ -352,6 +382,8 @@ if st.button("Generate", type="primary"):
             base_cv=base_cv,
             base_cover_letter=base_cover_letter,
             model=model,
+            country=country,
+            cv_style=cv_style,
             fix_mode=False,
         )
 
@@ -364,6 +396,8 @@ if st.button("Generate", type="primary"):
                 base_cv=base_cv,
                 base_cover_letter=base_cover_letter,
                 model=model,
+                country=country,
+                cv_style=cv_style,
                 fix_mode=True,
                 issues_to_fix=data["new_claims_not_in_base"],
             )
