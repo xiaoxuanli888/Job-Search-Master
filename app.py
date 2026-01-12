@@ -23,6 +23,79 @@ def load_text(path: str) -> str:
         return f.read()
 
 
+def extract_about_me_from_cv(base_cv: str) -> str:
+    """
+    Extract the 'about me' section from base_cv.txt
+    Looks for common patterns like:
+    - ABOUT ME:
+    - About Me:
+    - PROFESSIONAL SUMMARY:
+    - Professional Summary:
+    - PROFILE:
+    Returns the content until the next section heading or empty if not found.
+    """
+    # Common section headers that might indicate the about me section
+    about_me_patterns = [
+        r"(?i)^ABOUT\s+ME[:\s]*$",
+        r"(?i)^About\s+Me[:\s]*$",
+        r"(?i)^PROFESSIONAL\s+SUMMARY[:\s]*$",
+        r"(?i)^Professional\s+Summary[:\s]*$",
+        r"(?i)^PROFILE[:\s]*$",
+        r"(?i)^Profile[:\s]*$",
+        r"(?i)^SUMMARY[:\s]*$",
+        r"(?i)^Summary[:\s]*$",
+    ]
+    
+    # Common next section headers to know where about me ends
+    next_section_patterns = [
+        r"(?i)^EXPERIENCE[:\s]*$",
+        r"(?i)^WORK\s+EXPERIENCE[:\s]*$",
+        r"(?i)^PROFESSIONAL\s+EXPERIENCE[:\s]*$",
+        r"(?i)^EMPLOYMENT[:\s]*$",
+        r"(?i)^EDUCATION[:\s]*$",
+        r"(?i)^SKILLS[:\s]*$",
+        r"(?i)^TECHNICAL\s+SKILLS[:\s]*$",
+    ]
+    
+    lines = base_cv.split('\n')
+    about_me_content = []
+    found_start = False
+    
+    for i, line in enumerate(lines):
+        # Check if this line is an "about me" header
+        if not found_start:
+            for pattern in about_me_patterns:
+                if re.match(pattern, line.strip()):
+                    found_start = True
+                    break
+            continue
+        
+        # If we found the start, collect content until next section
+        stripped = line.strip()
+        
+        # Check if we hit the next section
+        is_next_section = False
+        for pattern in next_section_patterns:
+            if re.match(pattern, stripped):
+                is_next_section = True
+                break
+        
+        if is_next_section:
+            break
+        
+        # Add non-empty lines to about me content
+        if stripped:
+            about_me_content.append(stripped)
+    
+    result = ' '.join(about_me_content).strip()
+    
+    # If nothing found, return a helpful placeholder
+    if not result:
+        result = "Professional with extensive experience. [Note: Could not auto-extract 'about me' from base_cv.txt - please add a clear ABOUT ME: or PROFESSIONAL SUMMARY: section]"
+    
+    return result
+
+
 def safe_filename(s: str) -> str:
     s = re.sub(r"[^A-Za-z0-9]+", "_", (s or "").strip())
     return s.strip("_") or "output"
@@ -121,6 +194,7 @@ def generate_structured(
     prompt_rules: str,
     base_cv: str,
     base_cover_letter: str,
+    base_about_me: str,
     model: str,
     country: str,
     cv_style: str,
@@ -139,7 +213,7 @@ def generate_structured(
         issues_text = "\n".join([f"- {x}" for x in issues_to_fix])
 
     system_instructions = f"""
-You are a CV + cover letter customization engine.
+You are a CV + cover letter customization engine with a focus on hiring manager perspective.
 
 TARGET CONTEXT
 - Country: {country}
@@ -150,22 +224,55 @@ TARGET CONTEXT
 You are given:
 1) The user's ORIGINAL CV content (base CV)
 2) The user's ORIGINAL cover letter (base cover letter)
-3) A job description
+3) The user's ORIGINAL "about me" section (base about me)
+4) A job description
 
 OVERALL GOAL
 - Tailor the CV and cover letter so that, when a recruiter scans them,
   the Versuni experience bullets and the cover letter bullet points
   clearly mirror the structure and priorities of the job description.
 
+ABOUT ME SECTION - HIRING MANAGER REQUIREMENTS (CRITICAL):
+As a hiring manager, the "about me" section is the FIRST thing I read. It must:
+
+1. PRESERVE ALL FACTS AND NUMBERS:
+   - Keep ALL years of experience, metrics, percentages, achievement numbers EXACTLY as stated in base_about_me
+   - Do NOT change any numerical values (e.g., if it says "5 years", keep "5 years")
+   - Do NOT modify any specific achievements or quantifiable results
+   - Do NOT invent new numbers or metrics not present in the original
+
+2. STRATEGIC ALIGNMENT WITH JOB DESCRIPTION:
+   - Extract the top 3-5 key requirements from the job description
+   - Reorder and emphasize content from base_about_me to prioritize what matches these requirements
+   - Use similar terminology and keywords from the job description while keeping original facts
+   - Lead with the most relevant experience for THIS specific role
+
+3. STRUCTURE (3-5 sentences, ~80-120 words):
+   - Opening sentence: Professional identity + years of experience (from base_about_me)
+   - Middle 2-3 sentences: Key achievements with original numbers that align to job requirements
+   - Closing sentence: Value proposition or what you're seeking (adapted to this role)
+
+4. WRITING STYLE:
+   - Use strong action verbs that appear in the job description
+   - Mirror the tone (formal for corporate, dynamic for startup)
+   - Keep the candidate's authentic voice from base_about_me
+   - Make every word count - no filler phrases
+
+5. WHAT TO AVOID:
+   - Generic statements that could apply to anyone
+   - Inventing experience or numbers not in base_about_me
+   - Changing the order of facts unless it improves alignment with JD
+   - Losing the candidate's personality or unique strengths
+
 ALIGNMENT WITH JOB DESCRIPTION BULLET POINTS
 - First, read the job description and mentally identify the main bullets
-  under responsibilities / requirements / what you’ll do / who you are.
+  under responsibilities / requirements / what you'll do / who you are.
 - Keep their original order from top to bottom.
 - For the Versuni section:
   - You MUST produce exactly 6 bullets.
   - Order these 6 bullets to follow the job description bullet order.
     Bullet 1 should align to the first key requirement, bullet 2 to the next, etc.
-  - Each bullet should clearly show “I did this / I can do this” for that specific requirement,
+  - Each bullet should clearly show "I did this / I can do this" for that specific requirement,
     using matching concepts and key phrases where honest.
 - For the cover letter body:
   - Include a clear section with bullet points (or short structured lines) that
@@ -174,10 +281,10 @@ ALIGNMENT WITH JOB DESCRIPTION BULLET POINTS
     so a recruiter instantly sees the one-to-one match.
 
 GROUNDING RULES (NO INVENTED CLAIMS)
-- All content MUST be strictly grounded in the base CV + base cover letter.
+- All content MUST be strictly grounded in the base CV + base cover letter + base about me.
 - Do NOT invent employers, titles, dates, locations, tools, budgets, metrics, languages,
   or results that are not clearly supported by the base materials.
-- You MAY rephrase and recombine what’s already there to increase relevance and clarity.
+- You MAY rephrase and recombine what's already there to increase relevance and clarity.
 
 WRITING STYLE
 - Keep writing crisp, structured, and ATS-friendly.
@@ -188,13 +295,13 @@ SCHEMA & SAFETY
 - You must output exactly:
   - company
   - role_title
-  - about_me
+  - about_me (tailored from base_about_me with original facts preserved)
   - versuni_bullets (exactly 6)
   - philips_bullets (exactly 2)
   - cover_letter_body
   - new_claims_not_in_base (list of strings)
 - IMPORTANT SAFETY CHECK:
-  If you add any claim not clearly supported by the base CV or base cover letter,
+  If you add any claim not clearly supported by the base CV, base cover letter, or base about me,
   list it in new_claims_not_in_base. Otherwise return [].
 
 SECOND-PASS FIX MODE (only if requested):
@@ -211,6 +318,9 @@ BASE CV (source of truth):
 BASE COVER LETTER (source of truth):
 {base_cover_letter}
 
+BASE ABOUT ME (source of truth - preserve all facts and numbers):
+{base_about_me}
+
 USER PROMPT / RULES (additional preferences):
 {prompt_rules}
 """.strip()
@@ -220,8 +330,9 @@ USER PROMPT / RULES (additional preferences):
         user_msg += (
             "\n\nPlease revise the draft to remove unsupported claims and keep "
             "new_claims_not_in_base empty, while maintaining strong impact, "
-            "keeping 6 Versuni bullets aligned to the JD bullet order, and "
-            "preserving the cover letter structure."
+            "keeping 6 Versuni bullets aligned to the JD bullet order, "
+            "preserving all original facts and numbers in about_me, and "
+            "maintaining the cover letter structure."
         )
 
     resp = client.responses.parse(
@@ -331,6 +442,17 @@ prompt_rules = load_text("prompt/instructions.txt")
 base_cv = load_text("prompt/base_cv.txt")
 base_cover_letter = load_text("prompt/base_cover_letter.txt")
 
+# Auto-extract about me from base_cv
+base_about_me = extract_about_me_from_cv(base_cv)
+
+# Show extraction status
+if "[Note: Could not auto-extract" in base_about_me:
+    st.warning("⚠️ Could not automatically find 'About Me' section in base_cv.txt. Please ensure your CV has a clear section header like 'ABOUT ME:', 'PROFESSIONAL SUMMARY:', or 'PROFILE:'")
+else:
+    with st.expander("ℹ️ Auto-extracted 'About Me' section from base_cv.txt"):
+        st.write(base_about_me)
+        st.caption("This will be tailored for each job while preserving all facts and numbers.")
+
 # Optional test JD
 test_jd_path = "prompt/test_job_description.txt"
 try:
@@ -339,6 +461,7 @@ except FileNotFoundError:
     test_jd = ""
 
 st.caption("Choose country & style → paste a job description → generate → download ZIP with CV + cover letter (.docx).")
+st.info("💡 **Enhanced:** The 'about me' section is now intelligently tailored to each job while preserving all your original facts and numbers!")
 
 default_text = test_jd if (use_test and test_jd.strip()) else ""
 job_description = st.text_area("Job description", value=default_text, height=320)
@@ -375,12 +498,13 @@ if st.button("Generate", type="primary"):
         st.stop()
 
     # 1) First pass
-    with st.spinner("Generating..."):
+    with st.spinner("Generating tailored CV with optimized 'about me' section..."):
         data = generate_structured(
             job_description=job_description,
             prompt_rules=prompt_rules,
             base_cv=base_cv,
             base_cover_letter=base_cover_letter,
+            base_about_me=base_about_me,
             model=model,
             country=country,
             cv_style=cv_style,
@@ -395,6 +519,7 @@ if st.button("Generate", type="primary"):
                 prompt_rules=prompt_rules,
                 base_cv=base_cv,
                 base_cover_letter=base_cover_letter,
+                base_about_me=base_about_me,
                 model=model,
                 country=country,
                 cv_style=cv_style,
@@ -424,7 +549,13 @@ if st.button("Generate", type="primary"):
 
     zip_bytes = make_zip(cv_bytes, cl_bytes, cv_name, cl_name)
 
-    st.success("Done!")
+    st.success("Done! Your 'about me' section has been strategically aligned to this role.")
+    
+    # Preview the generated about me
+    with st.expander("📝 Preview: Generated 'About Me' Section"):
+        st.write(data["about_me"])
+        st.caption("Compare this with your original to see how it's been tailored while preserving all facts.")
+    
     st.download_button(
         "Download CV + Cover Letter (ZIP)",
         data=zip_bytes,
