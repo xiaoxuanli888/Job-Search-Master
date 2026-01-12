@@ -212,6 +212,36 @@ def generate_structured(
     if fix_mode and issues_to_fix:
         issues_text = "\n".join([f"- {x}" for x in issues_to_fix])
 
+    # Style-specific closing guidance
+    closing_guidance = ""
+    if cv_style == "Startup":
+        closing_guidance = """
+IMPORTANT - STARTUP STYLE CLOSING:
+For startup CVs, ALWAYS end the about_me section with a forward-looking statement using this structure:
+"I'm now looking to bring [relevant skills/expertise from base_about_me] to [type of role/company that aligns with the job description]."
+
+Examples:
+- "I'm now looking to bring my product leadership and data-driven approach to a fast-growing tech startup."
+- "I'm now looking to bring my expertise in scaling consumer products to an innovative company transforming [relevant industry]."
+
+This closing must:
+- Connect naturally to what came before
+- Reference actual skills/experience from base_about_me
+- Align with the job description's company type and mission
+- Sound authentic and forward-thinking
+"""
+    elif cv_style == "Corporate":
+        closing_guidance = """
+CORPORATE STYLE CLOSING:
+For corporate CVs, the closing should be professional and value-focused. You may:
+- End with a statement about your value proposition
+- Highlight what you bring to the organization
+- Keep it formal and achievement-oriented
+- Optionally include a forward-looking element, but it's not required
+
+The tone should match corporate expectations: polished, results-driven, and confident.
+"""
+
     system_instructions = f"""
 You are a CV + cover letter customization engine with a focus on hiring manager perspective.
 
@@ -263,6 +293,8 @@ As a hiring manager, the "about me" section is the FIRST thing I read. It must:
    - Inventing experience or numbers not in base_about_me
    - Changing the order of facts unless it improves alignment with JD
    - Losing the candidate's personality or unique strengths
+
+{closing_guidance}
 
 ALIGNMENT WITH JOB DESCRIPTION BULLET POINTS
 - First, read the job description and mentally identify the main bullets
@@ -462,6 +494,9 @@ except FileNotFoundError:
 
 st.caption("Choose country & style → paste a job description → generate → download ZIP with CV + cover letter (.docx).")
 st.info("💡 **Enhanced:** The 'about me' section is now intelligently tailored to each job while preserving all your original facts and numbers!")
+
+if cv_style == "Startup":
+    st.success("✨ **Startup Style:** Your 'about me' will include a forward-looking closing statement (e.g., 'I'm now looking to bring...')")
 
 default_text = test_jd if (use_test and test_jd.strip()) else ""
 job_description = st.text_area("Job description", value=default_text, height=320)
