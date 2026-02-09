@@ -1,0 +1,77 @@
+I want you to generate a job-specific CV and cover letter in one go.
+
+TARGET ROLE
+- Role title: Use the exact role title as written in the job description
+- Company name: [Company Name]
+
+JOB DESCRIPTION
+
+
+MY CURRENT CV
+In the attachment, name: Xiaoxuan_Li_CV_for corporate
+BASE COVER LETTER
+In the attachment, name: Xiaoxuan_Li_Base_Cover_Letter
+
+CV INSTRUCTIONS
+1. Change my job title in the CV header and my old roles to the exact role title from the job description.
+2. Rewrite ONLY the “About Me” section:
+   - Align it with the role and job description
+   - Keep my experience, strengths, and scope unchanged
+   - Do NOT invent experience
+   - Do NOT remove or alter any numbers that show impact (€ / % / #countries / #stakeholders)
+   - Light ATS optimization only (level 3): wording alignment, no keyword stuffing
+3. Rewrite ONLY the bullet points in the Work Experience for all the roles section:
+   - Align wording with the job description
+   - Keep structure, scope, and metrics unchanged
+   - Do NOT add or fabricate experience
+4. Leave the following sections completely untouched (word-for-word):
+   - AI & Technical Exploration
+   - Skills & Tools
+   - Languages
+   - Education
+5. FORMATTING & LAYOUT CONSTRAINTS (CRITICAL)
+- Do NOT insert extra blank lines.
+- Use single line breaks (Shift+Enter behavior) instead of new paragraphs wherever possible.
+- Paragraph spacing:
+  - Before: 0 pt
+  - After: 0 pt
+- Section headers must sit directly above their content with no blank line in between.
+- Bullet points must be tightly grouped:
+  - No blank lines between bullets
+  - No extra spacing before or after bullet lists
+- Dates, locations, and job titles must remain on the same line as in the original CV.
+- Line wrapping should occur naturally only when text reaches the right margin.
+- Do NOT add visual padding for readability — prioritize layout fidelity over aesthetic spacing.
+6. Language: English
+7. Font: Aptos (Body)
+8. Generate a downloadable Word document named:
+   Xiaoxuan_Li_CV_[Exact Role Title]_[Company Name].docx
+
+COVER LETTER INSTRUCTIONS
+1. Generate a new cover letter based on:
+   - My CV
+   - The job description
+   - My base cover letter
+2. Update:
+   - Role title and company name everywhere 
+   - Salutation: “Dear [Company Name] team,”
+3. Expand the opening paragraph to:
+   - Reflect what the role requires
+   - Explicitly connect those requirements to my experience
+4. Keep this section structure unchanged (only adapt role + company + what the company does):
+   “What makes me different as a [Role Title]? My curiosity and my ability to learn fast…”
+5. Keep exactly 3 bullet points in the middle section:
+   - Rewrite for role relevance
+   - Preserve all metrics and factual experience
+6. Update the closing paragraph to reference the company name.
+7. Language: English
+8. Font: Aptos (Body)
+9. COVER LETTER LAYOUT
+- Body paragraphs must be compact and continuous.
+- Do NOT insert empty lines between paragraphs unless they exist in the original cover letter.
+- Bullets (if present) must be visually dense and aligned with body text.
+10. Generate a downloadable Word document named:
+   Xiaoxuan_Li_Cover_Letter_[Exact Role Title]_[Company Name].docx
+   
+Do not oversell. Prefer precise, operational wording over buzzwords.
+Optimize primarily for ATS, secondarily for hiring managers,

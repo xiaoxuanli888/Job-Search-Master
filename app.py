@@ -6,7 +6,7 @@ from typing import Dict, Any, List, Optional
 
 import streamlit as st
 from docx import Document
-from openai import OpenAI
+from anthropic import Anthropic
 from pydantic import BaseModel, Field
 
 
@@ -187,7 +187,7 @@ class CVCoverOutput(BaseModel):
 
 
 # -----------------------------
-# OpenAI call (Responses API + parse)
+# Anthropic call (Responses API + parse)
 # -----------------------------
 def generate_structured(
     job_description: str,
@@ -206,7 +206,7 @@ def generate_structured(
     fix_mode=True: second pass if the model flagged unsupported claims.
                    It must remove/adjust those claims AND still return 6 Versuni bullets.
     """
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    client = Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])  # ← CHANGED
 
     issues_text = ""
     if fix_mode and issues_to_fix:
@@ -341,6 +341,18 @@ SECOND-PASS FIX MODE (only if requested):
   so that new_claims_not_in_base becomes [].
 - You must still return 6 Versuni bullets and keep the JD-aligned ordering.
 
+OUTPUT FORMAT:
+Return ONLY a valid JSON object with this exact structure (no markdown, no extra text):
+{{
+  "company": "string",
+  "role_title": "string",
+  "about_me": "string",
+  "versuni_bullets": ["string", "string", "string", "string", "string", "string"],
+  "philips_bullets": ["string", "string"],
+  "cover_letter_body": "string",
+  "new_claims_not_in_base": []
+}}
+
 Unsupported claims to fix (if any):
 {issues_text if issues_text else "(none)"}
 
@@ -367,17 +379,25 @@ USER PROMPT / RULES (additional preferences):
             "maintaining the cover letter structure."
         )
 
-    resp = client.responses.parse(
+    # ← CHANGED: New Claude API call
+    response = client.messages.create(
         model=model,
-        input=[
-            {"role": "system", "content": system_instructions},
-            {"role": "user", "content": user_msg},
+        max_tokens=8192,
+        system=system_instructions,
+        messages=[
+            {"role": "user", "content": user_msg}
         ],
-        text_format=CVCoverOutput,
     )
 
-    return resp.output_parsed.model_dump()
-
+    # Parse the response
+    output_text = response.content[0].text
+    
+    # Strip markdown code fences if present
+    if "```json" in output_text:
+        output_text = output_text.replace("```json", "").replace("```", "").strip()
+    
+    parsed = CVCoverOutput.model_validate_json(output_text)
+    return parsed.model_dump()
 
 # -----------------------------
 # Build docs from templates
