@@ -1,4 +1,4 @@
-Dear [Company Name] team,
+
 I’m applying for the [Role Title] role at [Company Name]. [1–2 sentences about what the company does and why it interests you — be specific about their product, a recent milestone, or a problem they’re solving.]
 For 7 years at Philips and Versuni, I managed campaign execution at a scale most marketing managers never touch — 21+ international markets, 7 product categories, 8+ cross-functional teams, and 100+ stakeholders.
 Why AI SaaS? Because I don’t want to just use AI tools — I want to be inside the companies building them. I’ve spent the last few months building AI agents myself, studying applied AI through DeepLearning.AI, and developing my own AI-powered product. That hands-on experience convinced me this isn’t a passing interest — it’s where I want to spend the next decade of my career. I’m looking for a team that’s ambitious, moves fast, and cares deeply about growth.
@@ -14,6 +14,4 @@ Here’s what I can bring to [Company Name] from day one:
 “What excites me about [Company] is [specific thing]. My experience [relevant experience] means I can contribute to [specific goal] from the start.”
 “I noticed [Company] recently [milestone/announcement]. Having [relevant experience], I understand the challenges of [relevant challenge] and I’m eager to help solve them.”]
 I know I’m a non-traditional candidate. What I bring is the operational rigor that comes from executing marketing at international enterprise scale, genuine hands-on AI work, and the hunger to prove myself in a new environment. Early-stage GTM is chaotic — I’ve spent my career making chaotic, multi-stakeholder operations run. I’d welcome the chance to discuss how I can contribute to [Company Name]’s growth.
-Best regards,
-Xiaoxuan Li
-LinkedIn | GitHub | xiaoxuanli@outlook.com | +49 155 1137 8722 | Berlin
+
