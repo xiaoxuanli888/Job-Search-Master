@@ -287,6 +287,8 @@ As a hiring manager, the "about me" section is the FIRST thing I read. It must:
    - Mirror the tone (formal for corporate, dynamic for startup)
    - Keep the candidate's authentic voice from base_about_me
    - Make every word count - no filler phrases
+  - Make it easier for the recruiter to get my skills and experience that match the job description
+
 
 5. WHAT TO AVOID:
    - Generic statements that could apply to anyone
@@ -307,6 +309,7 @@ ALIGNMENT WITH JOB DESCRIPTION BULLET POINTS
   - Each bullet should clearly show "I did this / I can do this" for that specific requirement,
     using matching concepts and key phrases where honest.
 - For the cover letter body:
+   - Update Salutation: “Dear [Company Name] team,”
   - Include a clear section with bullet points (or short structured lines) that
     explicitly map your experience to the job requirements.
   - Order those cover letter bullets in the same sequence as the job description bullets,

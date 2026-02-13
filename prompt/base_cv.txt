@@ -1,27 +1,39 @@
-Xiaoxuan Li – Digital Marketing Manager
+Xiaoxuan Li – Digital & Growth Marketing Manager
 LinkedIn | GitHub | xiaoxuanli@outlook.com | +49 155 1137 8722 | Berlin | EU Permanent Resident
 
 About Me
-Digital Marketing Manager specializing in large-scale digital campaigns across web & emails for global consumer brands and early-stage startups. Over 7 years at Philips and Philips Domestic Appliances, I progressed through different roles and gained hands-on experience acquiring and converting consumers across digital channels. I believe curiosity and fast learning drive success in complex digital environments. When everything evolves fast, someone must adapt quickly and unify the work. At Philips Domestic Appliances, I became that person, culminating in leading the company’s first fully unified product launch across multiple digital channels in 21+ countries, improving conversion by 15%, and building cross-channel processes used by 100+ stakeholders. One of these launches achieved a #1 bestseller position and contributed €4M+ in revenue.
+Digital Marketing Manager with 7+ years of experience executing campaigns at international scale across web, email, app, and CRM at Philips and Versuni (Philips Domestic Appliances). Managed product launch rollouts across 21+ markets, improved conversion rates from 4% to 15% through A/B testing and optimization, and coordinated 8+ cross-functional teams and 100+ stakeholders.
+My core strength is taking complex, multi-stakeholder, multi-market operations and making them work — systematizing what’s chaotic, connecting teams that don’t naturally talk to each other, and ensuring campaigns ship on time across markets. I’m now applying that same operational discipline to a new domain: AI SaaS.
+After 7 years in enterprise marketing, I’m making a deliberate transition into AI SaaS — driven by hands-on experience building AI agents and a conviction that this is where I want to build my career for the long term. I’m not just interested in AI — I’m building with it. I’m looking for a team where I can combine my operational strengths with the pace, ambition, and growth mindset of an early-stage company.
+Currently advising an early-stage startup on digital marketing and acquisition, building AI agents as personal projects, and studying applied AI through DeepLearning.AI. Open to Marketing Operations, Growth Marketing, Digital Marketing, or junior GTM roles at AI/Tech SaaS companies.
 
 Work Experience
-Digital Marketing Manager | Philips Domestic Appliances (Versuni) | Amsterdam		2021-2025                                    
-•	Lead Product Launches across Web, Email: Led the first fully unified product launch for Philips Domestic Appliances across web and emails – redefining the strategy, closing consistency gaps among teams and freeing 100+ hours quarterly. Philips OneUp campaign delivered a #1 bestseller across all product categories and over €4M in revenue during the 1st wave of launch.
-•	Drive Revenue Growth via CRO, Web Optimization, and Email Marketing Initiatives: Lifted conversion from 4% to 15% by optimizing website design through user testing, localizing assets for 21+ markets, tailoring email journeys based on product’s value proposition, and testing in-app push notifications and in-app sales through A/B testing. 
-•	Manage Cross-functional Team: Collaborated with 8+ cross-functional teams (Brand, Marketing, Product, UX, IT, Legal, Logistics, Agencies) to scale campaign impact, expand customer reach, and improve the customer journey.
-•	Drive Performance Analytics: Drove analytics and data-driven A/B testing and applied SEO best practices to product landing pages, driving organic search growth from 1.5% to 5%.
-•	Optimize Process and Operational Excellence: Built a centralized knowledge hub used by 100+ stakeholders cross Brands, Marketing, and Product team. 
+Digital & Growth Marketing Advisor | Freelance | Berlin					Present
+•	Build a complete email journey and email templates to replace manual WhatsApp communication, freeing 25 hours per week.
+•	Consolidate fragmented data into a unified system (HubSpot) to automate onboarding, engagement, and retention flows. 
+Client: Zeya Social, an early-stage social startup. I focus on acquisition and early lifecycle experimentation in email marketing to deepen my hands-on growth experience in a startup environment.
 
-Ecommerce and IT Project Manager | Royal Philips | Amsterdam				2019-2021                                                               
-•	Managed Ecommerce Projects: Managed global e-commerce projects, achieving +18% sales uplift through optimization initiatives and launching store locator features across 60 countries.
-•	Led Financial Analysis and Budget Management: Oversaw a €36M digital transformation program, coordinating 6 IT workstreams during the Philips Domestic Appliances disentanglement program.
+Digital & Growth Marketing Manager | Philips Domestic Appliances (Versuni) | Amsterdam	2021-2025                                    
+Managed digital marketing campaigns across web, email, app, and push notification channels for 21+ international markets and 7 product categories.
+•	Product launch execution: Managed the digital rollout of the company’s first fully unified product launch across web, email, in-app sales, and push notifications in 21+ countries. Coordinated cross-channel delivery, closed consistency gaps across teams, and freed 100+ hours quarterly. The Philips OneUp campaign achieved #1 bestseller position and contributed €4M+ in revenue.
+•	Conversion rate optimization: Improved conversion from 4% to 15% through A/B testing on landing pages, in-app push notifications, and email journeys. Optimized website design through user testing and localized assets for 21+ markets.
+•	Cross-functional coordination: Collaborated with 8+ teams (Brand, Marketing, Product, UX, IT, Legal, Logistics, Agencies) to scale campaign impact and improve the customer journey.
+•	SEO & organic growth: Applied SEO best practices to product landing pages, growing organic search traffic from 1.5% to 5%.
+•	Process & knowledge management: Built a centralized knowledge hub used by 100+ stakeholders across Brands, Marketing, and Product teams.
+
+Digital Marketing Project Manager | Royal Philips | Amsterdam				2019-2021                                                               
+•	Ecommerce optimization: Managed global e-commerce projects, achieving +18% sales uplift through optimization initiatives and launching store locator features across 60 countries.
+•	Large-scale program management: Oversaw a €36M digital transformation program, coordinating 6 IT workstreams during the Philips Domestic Appliances disentanglement.
 
 AI & Technical Exploration
-Built an AI agent as a personal project to explore AI-powered workflows and tools. Link on GitHub
+•	Built an AI agent as a personal project to explore AI-powered workflows and tools. Link on GitHub
+•	Completing DeepLearning.AI programs in AI agents and automation workflows
+•	Building a side project: developing an AI-powered product and taking it through the full go-to-market process
+
 
 Skills & Tools
 Skills: Web Management & SEO | CRM Campaign Management | Analytics & Reporting | Cross-functional Project Management | UX | A/B Testing | International Stakeholder Management
-Tools: CMS (Adobe Experience Manager, Squarespace) | CRM (HubSpot) | SEO (Semrush) | Design (Figma, Photoshop) | Automation (Zapier)
+Tools: CMS (Adobe Experience Manager, Squarespace) | CRM (HubSpot) | SEO (Semrush) | Design (Figma, Photoshop) | Automation (n8n)
 
 Languages
 Mandarin Chinese (Native) | Cantonese Chinese (Native) | English (Fluent) | Dutch (B1) | German (B1, taking B2 courses)

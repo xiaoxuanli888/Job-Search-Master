@@ -1,30 +1,19 @@
-I am excited to apply for the Growth Generalist role at Peec AI. I’m drawn to how Peec AI provides
-insights that help brands navigate and grow in the AI-search era, and I’m impressed by how quickly
-the team identified this opportunity and scaled. This resonates with me because my work has
-always been about helping brands grow across digital marketing channels — especially acquiring
-and converting consumers through web, email, and app. With AI transforming how people search
-and discover brands, I’m eager to take the principles I use today and apply them to this new channel,
-and contribute to Peec’s mission in this evolving landscape.
-That’s why I’m genuinely excited to apply for the Growth Generalist role at Peec AI.
-What makes me different as a Growth Generalist? My curiosity and my ability to learn fast. As I
-share below, these traits have driven my success so far, and I know they matter even more at Peec,
-because you’re building in a new and rapidly evolving domain.
-Here are three ways my experience matches what you’re looking for, and how my curiosity and fast
-learning contributes to this role:
-• Growth marketing skills: I am skilled in driving growth across multiple digital channels. I led the first fully unified product launch for Philips Domestic Appliances across web, email, in-app sales,
-and push notifications. I redefined the strategy for each channel based on the product proposition,
-closed communication and consistency gaps across teams, and freed 100+ hours quarterly. When I
-was assigned this role, my curiosity drove me to learn the technical aspects and existing strategies
-of email journeys and the app. My fast-learning ability helped me navigate complexity, understand
-workflows quickly, and adjust strategies accordingly. I delivered the Philips OneUp campaign as a #1
-bestseller across all product categories, generating over €4M in revenue.
-• Onboarding/activation optimization experience: I am skilled in using data to improve
-conversion. I drove A/B tests on landing pages, in-app push notifications, and in-app sales
-campaigns to increase conversion rates. Together with the team, we improved the conversion rate
-from 4% to 15% for the Philips Dual Basket Airfryer campaigns.
-• Cross-functional stakeholder management: In my daily work, I collaborate with 8+ crossfunctional teams (Brand, Marketing, Product, UX, IT, Legal, Logistics, Agencies) to scale campaign
-impact, expand customer reach, and improve the customer journey. My curiosity and fast-learning
-capability play a crucial role in maintaining strong collaboration. I am curious about the expertise of
-each team member, which helps me learn from them and work effectively together.
-That’s exactly the energy I’d love to bring to Peec AI. Does this sound like the approach you're looking
-for? If so, I’d love to chat. I look forward to hearing from you soon.
+Dear [Company Name] team,
+I’m applying for the [Role Title] role at [Company Name]. [1–2 sentences about what the company does and why it interests you — be specific about their product, a recent milestone, or a problem they’re solving.]
+For 7 years at Philips and Versuni, I managed campaign execution at a scale most marketing managers never touch — 21+ international markets, 7 product categories, 8+ cross-functional teams, and 100+ stakeholders.
+Why AI SaaS? Because I don’t want to just use AI tools — I want to be inside the companies building them. I’ve spent the last few months building AI agents myself, studying applied AI through DeepLearning.AI, and developing my own AI-powered product. That hands-on experience convinced me this isn’t a passing interest — it’s where I want to spend the next decade of my career. I’m looking for a team that’s ambitious, moves fast, and cares deeply about growth.
+What’s my Signature Strength?
+Taking complex, multi-stakeholder operations and making them work. Systematizing what’s chaotic, connecting teams that don’t naturally talk to each other, and making sure things ship. At Philips/Versuni, that meant coordinating product launches across 21 markets and 8 teams. At Zeya Social (a startup), that meant building their marketing infrastructure from scratch — setting up HubSpot, creating email lifecycle flows. My AI building proves I can apply that same discipline to a new domain.
+Here’s what I can bring to [Company Name] from day one:
+•	Execution across channels with measurable results: Managed the digital rollout of a unified product launch across web, email, in-app, and push notifications in 21+ countries. Ran A/B tests and optimization experiments that improved conversion from 4% to 15%.
+•	Cross-functional coordination at scale: Operated as the bridge between marketing, product, UX, IT, and agencies — translating requirements into project plans and keeping complex programs on track. Coordinated a €36M digital transformation program across 6 IT workstreams.
+•	Startup marketing with real results: At Zeya Social, I set up HubSpot, built complete email journeys replacing manual WhatsApp communication (freeing 25 hours/week), and ran conversion experiments across multiple growth funnels.
+•	Hands-on AI building: Built an AI agent as a personal project, completing DeepLearning.AI programs in AI agents and automation workflows, and developing my own AI-powered product through the full go-to-market process. [Update with side project name and status once launched.]
+
+[1–2 sentences connecting something specific about this company to your experience. Examples:
+“What excites me about [Company] is [specific thing]. My experience [relevant experience] means I can contribute to [specific goal] from the start.”
+“I noticed [Company] recently [milestone/announcement]. Having [relevant experience], I understand the challenges of [relevant challenge] and I’m eager to help solve them.”]
+I know I’m a non-traditional candidate. What I bring is the operational rigor that comes from executing marketing at international enterprise scale, genuine hands-on AI work, and the hunger to prove myself in a new environment. Early-stage GTM is chaotic — I’ve spent my career making chaotic, multi-stakeholder operations run. I’d welcome the chance to discuss how I can contribute to [Company Name]’s growth.
+Best regards,
+Xiaoxuan Li
+LinkedIn | GitHub | xiaoxuanli@outlook.com | +49 155 1137 8722 | Berlin
